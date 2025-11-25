@@ -18,6 +18,7 @@ if (process.env.ANALYZE === 'true') {
 // https://vite.dev/config/
 export default defineConfig({
   plugins,
+  base: './',
   build: {
     rollupOptions: {
       output: {

@@ -398,12 +398,11 @@ const HotspotLayer = ({
     }
 
     let animationFrame = 0
-    const cycleMs = 2200
+    const cycleMs = 2800
     const baseRadius = 10
-    const grow = 46
+    const grow = 40
     let startTs = 0
-    let prevProgress = 0
-    const ease = (t: number) => t ** 1.4
+    const ease = (t: number) => t ** 1.2
 
     const animateRipple = (ts: number) => {
       if (!map.getLayer(unclusteredRippleLayerId)) {
@@ -413,32 +412,20 @@ const HotspotLayer = ({
 
       const elapsed = ts - startTs
       const progress = (elapsed % cycleMs) / cycleMs
-      const wrapped = progress < prevProgress
-
-      if (wrapped) {
-        map.setPaintProperty(unclusteredRippleLayerId, 'circle-opacity', 0)
-        map.setPaintProperty(unclusteredRippleLayerId, 'circle-radius', baseRadius)
-        prevProgress = progress
-        animationFrame = requestAnimationFrame(animateRipple)
-        return
-      }
 
       const eased = ease(progress)
       const radius = baseRadius + eased * grow
-      const fadeOut = Math.max(0, 1 - progress)
-      const fadeInWindow = 0.08
-      const fadeIn = progress < fadeInWindow ? progress / fadeInWindow : 1
 
-      const opacity = 0.6 * fadeOut * fadeIn
-      const strokeOpacity = 0.9 * Math.max(0, 1 - eased * 0.9)
-      const blur = 0.3 + eased * 1.2
+      // 平滑淡出：用 eased 值確保動畫結尾自然歸零，不會突然跳回
+      const opacity = 0.55 * (1 - eased)
+      const strokeOpacity = 0.8 * (1 - eased)
+      const blur = 0.3 + eased * 1.5
 
       map.setPaintProperty(unclusteredRippleLayerId, 'circle-radius', radius)
       map.setPaintProperty(unclusteredRippleLayerId, 'circle-opacity', opacity)
       map.setPaintProperty(unclusteredRippleLayerId, 'circle-stroke-opacity', strokeOpacity)
       map.setPaintProperty(unclusteredRippleLayerId, 'circle-blur', blur)
 
-      prevProgress = progress
       animationFrame = requestAnimationFrame(animateRipple)
     }
 

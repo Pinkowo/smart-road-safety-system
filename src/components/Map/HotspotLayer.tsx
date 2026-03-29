@@ -416,9 +416,11 @@ const HotspotLayer = ({
       const eased = ease(progress)
       const radius = baseRadius + eased * grow
 
-      // 平滑淡出：用 eased 值確保動畫結尾自然歸零，不會突然跳回
-      const opacity = 0.55 * (1 - eased)
-      const strokeOpacity = 0.8 * (1 - eased)
+      // fade-in 前 10%，fade-out 後 90%，確保 cycle 交界時 opacity 為 0
+      const fadeIn = Math.min(1, progress / 0.1)
+      const fadeOut = 1 - eased
+      const opacity = 0.55 * fadeIn * fadeOut
+      const strokeOpacity = 0.8 * fadeIn * fadeOut
       const blur = 0.3 + eased * 1.5
 
       map.setPaintProperty(unclusteredRippleLayerId, 'circle-radius', radius)

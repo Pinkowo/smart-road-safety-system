@@ -6,9 +6,9 @@ import type { MapboxInstance } from '../../lib/mapbox'
 // Mapbox Access Token （從環境變數載入）
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN
 
-// 台灣中心座標（來自 research.md）
-const TAIWAN_CENTER: [number, number] = [120.9605, 23.6978]
-const DEFAULT_ZOOM = 7
+// 台北市政府座標
+const TAIPEI_CITY_HALL: [number, number] = [121.5654, 25.0330]
+const DEFAULT_ZOOM = 14
 
 export interface MapViewProps {
   /** 自訂樣式類別 */
@@ -65,7 +65,7 @@ const MapView = ({
   const mapContainerRef = useRef<HTMLDivElement>(null)
   const mapRef = useRef<MapboxInstance | null>(null)
   const [mapLoaded, setMapLoaded] = useState(false)
-  const initialCenterRef = useRef<[number, number]>(center ?? TAIWAN_CENTER)
+  const initialCenterRef = useRef<[number, number]>(center ?? TAIPEI_CITY_HALL)
   const initialZoomRef = useRef<number>(zoom ?? DEFAULT_ZOOM)
 
   // 初始化地圖
